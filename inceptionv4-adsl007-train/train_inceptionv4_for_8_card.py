@@ -18,7 +18,7 @@ import moxing as mox
 from inceptionv4 import Inceptionv4
 from dataset_imagenet import create_dataset, device_id, device_num
 
-
+MEASURE_PERFMANCE = True
 EPOCH_SIZE = 20     # number of epochs to run
 CKPT_PREFIX = "inceptionv4-adsl007-final"   # prefix of checkpoint file to be saved
 CKPT_ROOT = "obs://togo-obs/mindspore_train/inceptionv4_ckpt"   # directory of checkpoint files for loading and saving
@@ -117,6 +117,20 @@ class LossMonitor(Callback):
             print("epoch: %s\t step: %s\t, avg loss is %s, loss is %s" % (
                 cb_params.cur_epoch_num, cur_step_in_epoch, self.avg, loss), flush=True)
 
+    def epoch_end(self, run_context):
+        cb_params = run_context.original_args()
+        loss = cb_params.net_outputs
+
+        if isinstance(loss, (tuple, list)):
+            if isinstance(loss[0], Tensor) and isinstance(loss[0].asnumpy(), np.ndarray):
+                loss = loss[0]
+
+        if isinstance(loss, Tensor) and isinstance(loss.asnumpy(), np.ndarray):
+            loss = np.mean(loss.asnumpy())
+
+        if self._per_print_times != 0 and cb_params.cur_step_num % self._per_print_times == 0 and device_id == 0:
+            print("epoch: %s\t loss is %s" % (
+                cb_params.cur_epoch_num, loss), flush=True)
 
 def get_lr(global_step,
            total_epochs,
@@ -229,7 +243,10 @@ def Inceptionv4_train():
         local_data_path, "ckpt"), config=config_ck)
 
     if device_num == 1 or device_id == 0:
-        callbacks = [loss_cb, performance_cb, ckpoint_cb]
+        if MEASURE_PERFMANCE:
+            callbacks = [performance_cb]
+        else:
+            callbacks = [loss_cb, performance_cb, ckpoint_cb]
     else:
         callbacks = []
 
