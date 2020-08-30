@@ -49,6 +49,16 @@ class PerformanceCallback(Callback):
         self.start_time = 0
         self.avg = 0.2
 
+    def epoch_begin(self, run_context):
+        self.t1 = time.time()
+
+    def epoch_end(self, run_context):
+        params = run_context.original_args()
+        self.t2 = time.time()
+        cost_time = self.t2 - self.t1
+        print(f'epoch {params.cur_epoch_num} cost time = {cost_time} s, '
+                f'one step time: {1000*cost_time/(1281167/(32))} ms\n')
+
     def step_begin(self, run_context):
         if self.start_time == 0:
             self.start_time = time.time()
@@ -167,6 +177,7 @@ def Inceptionv4_train():
 
     context.set_context(mode=context.GRAPH_MODE, device_target="Ascend")
     context.set_context(device_id=device_id)
+    context.set_context(enable_graph_kernel=True)
 
     # data download
     mox.file.copy_parallel(src_url="obs://public-obs2020/pytorch-imagenet/", dst_url=local_data_path)
