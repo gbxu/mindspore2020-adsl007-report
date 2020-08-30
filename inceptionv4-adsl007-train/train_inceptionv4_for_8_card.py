@@ -19,7 +19,7 @@ from inceptionv4 import Inceptionv4
 from dataset_imagenet import create_dataset, device_id, device_num
 
 DATA_PATH = "obs://public-obs2020/pytorch-imagenet/"
-MEASURE_PERFMANCE = True
+MEASURE_PERFORMANCE = True
 EPOCH_SIZE = 20     # number of epochs to run
 CKPT_PREFIX = "inceptionv4-adsl007-train-8cards"   # prefix of checkpoint file to be saved
 CKPT_ROOT = "obs://mindspore-res-commit-adsl/"   # directory of checkpoint files for loading and saving
@@ -244,7 +244,7 @@ def Inceptionv4_train():
         local_data_path, "ckpt"), config=config_ck)
 
     if device_num == 1 or device_id == 0:
-        if MEASURE_PERFMANCE:
+        if MEASURE_PERFORMANCE:
             callbacks = [performance_cb]
         else:
             callbacks = [loss_cb, performance_cb, ckpoint_cb]
