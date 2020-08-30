@@ -20,8 +20,8 @@ from dataset_imagenet import create_dataset, device_id, device_num
 
 MEASURE_PERFMANCE = True
 EPOCH_SIZE = 20     # number of epochs to run
-CKPT_PREFIX = "inceptionv4-adsl007-final"   # prefix of checkpoint file to be saved
-CKPT_ROOT = "obs://togo-obs/mindspore_train/inceptionv4_ckpt"   # directory of checkpoint files for loading and saving
+CKPT_PREFIX = "inceptionv4-adsl007-train-8cards"   # prefix of checkpoint file to be saved
+CKPT_ROOT = "obs://mindspore-res-commit-adsl/"   # directory of checkpoint files for loading and saving
 
 META_FILE = ""  # meta file of the checkpoint to be loaded
 CKPT_FILE = ""  # ckpt file of the checkpoint to be loaded
