@@ -10,6 +10,7 @@ import moxing as mox
 from inceptionv4 import Inceptionv4
 from dataset_imagenet import create_dataset, device_id, device_num
 
+DATA_PATH = "obs://public-obs2020/pytorch-imagenet/val/"
 CKPT_ROOT = "obs://mindspore-res-commit-adsl/" # directory of checkpoint files
 META_FILE = ["inceptionv4-adsl007-final-version.meta"]  # meta file of the checkpoint to be loaded
 CKPT_FILE = ["inceptionv4-adsl007-final-version.ckpt"]  # ckpt file of the checkpoint to be loaded
@@ -37,7 +38,7 @@ def Inceptionv4_eval():
     for meta_file in META_FILE:
         mox.file.copy(src_url=CKPT_ROOT+meta_file,
                       dst_url=os.path.join(local_data_path, meta_file))
-    mox.file.copy_parallel(src_url="obs://public-obs2020/pytorch-imagenet/val/", dst_url=local_data_path+"/val/")
+    mox.file.copy_parallel(src_url=DATA_PATH, dst_url=local_data_path+"/val/")
 
     # create dataset
     eval_dataset = create_dataset(dataset_path=local_data_path, do_train=False,

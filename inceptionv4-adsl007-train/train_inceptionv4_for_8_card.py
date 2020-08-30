@@ -18,6 +18,7 @@ import moxing as mox
 from inceptionv4 import Inceptionv4
 from dataset_imagenet import create_dataset, device_id, device_num
 
+DATA_PATH = "obs://public-obs2020/pytorch-imagenet/"
 MEASURE_PERFMANCE = True
 EPOCH_SIZE = 20     # number of epochs to run
 CKPT_PREFIX = "inceptionv4-adsl007-train-8cards"   # prefix of checkpoint file to be saved
@@ -199,7 +200,7 @@ def Inceptionv4_train():
                                           mirror_mean=True)
 
     # data download
-    mox.file.copy_parallel(src_url="obs://public-obs2020/pytorch-imagenet/", dst_url=local_data_path)
+    mox.file.copy_parallel(src_url=DATA_PATH, dst_url=local_data_path)
 
 
     # create dataset
