@@ -2,7 +2,7 @@ from mindspore.communication import init
 from mindspore.train.serialization import load_checkpoint
 from mindspore.train.callback import ModelCheckpoint, CheckpointConfig
 from mindspore.train.model import ParallelMode
-from mindspore.train.loss_scale_manager import FixedLossScaleManager
+from mindspore.train.loss_scale_manager import FixedLossScaleManager, DynamicLossScaleManager
 from mindspore.train.callback import Callback
 from mindspore import Model
 from mindspore.nn.loss import SoftmaxCrossEntropyWithLogits
@@ -48,6 +48,16 @@ class PerformanceCallback(Callback):
         self.epoch_begin_time = 0
         self.start_time = 0
         self.avg = 1.1
+
+    def epoch_begin(self, run_context):
+        self.t1 = time.time()
+
+    def epoch_end(self, run_context):
+        params = run_context.original_args()
+        self.t2 = time.time()
+        cost_time = self.t2 - self.t1
+        print(f'epoch {params.cur_epoch_num} cost time = {cost_time} s, '
+                f'one step time: {1000*cost_time/(1281167/(128*8))} ms\n')
 
     def step_begin(self, run_context):
         if self.start_time == 0:
@@ -167,6 +177,7 @@ def Inceptionv4_train():
 
     context.set_context(mode=context.GRAPH_MODE, device_target="Ascend")
     context.set_context(device_id=device_id)
+    context.set_context(enable_graph_kernel=True)
 
     if device_num > 1:
         context.set_auto_parallel_context(device_num=device_num,
