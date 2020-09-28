@@ -5,4 +5,4 @@ our inceptionv4 checkpoint file: [download](https://rec.ustc.edu.cn/share/c5b2f4
 
 ## about
 * team name: ADSL007  
-* team members: [@gbxu](https://github.com/gbxu), [@zzqq2199](https://github.com/zzqq2199),
+* team members: [@gbxu](https://github.com/gbxu), [@zzqq2199](https://github.com/zzqq2199), [@SolarisAdams](https://github.com/SolarisAdams),
